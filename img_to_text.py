@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import *
 from tkinter import ttk
 # ------------------ Ventana Raiz ---------------------
 root = tk.Tk()
@@ -33,7 +34,7 @@ entry_ruta.grid(row=1, column=1, padx=5, pady=5)
 
 button_ruta = tk.Button(root, 
                          text='Iniciar',
-                         font=('Arial', 12),
+                         font=('Helvetica  bold', 12),
                          bg='#00008B',
                          foreground='white')
 button_ruta.grid(row=2, column=0, columnspan=2, pady=20, ipadx=40, ipady=10)
@@ -45,8 +46,22 @@ text_captura = tk.Text(root,
                        border=10,
                        width=50,
                        height=30,
-                       autoseparators=True)
+                       wrap='char')
 text_captura.grid(row=3, column=0, columnspan=2, padx=10, pady=20)
+
+
+# ------------------ Barra de Menus ----------------------------
+barra_menu = Menu(root)
+root.config(menu=barra_menu)
+
+menu_file = Menu(barra_menu, tearoff=False)
+barra_menu.add_cascade(label='File', menu=menu_file)
+menu_file.add_command(label='Salir')
+
+menu_Ayuda = Menu(barra_menu, tearoff=False)
+barra_menu.add_cascade(label='Ayuda', menu=menu_Ayuda)
+menu_Ayuda.add_command(label='Acerca de')
+
 
 
 
