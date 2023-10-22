@@ -14,19 +14,19 @@ buttom_frame = tk.Frame(root, background='#292d3e')
 buttom_frame.pack()
 
 frame_text = tk.Frame(root, background='#292d3e')
-frame_text.pack()
+frame_text.pack(padx=10, pady=10)
 
 # ----------------- Elementos Interiores ----------------
 label_info = ttk.Label(buttom_frame, text='Extraiga texto de una imagen con Convert-Text ', 
                       background='#292d3e', 
                       foreground='#7FFFD4',
-                      font= ('Arial', 15))
+                      font= ('Arial', 15, 'bold'))
 label_info.grid(row=0, column=0, columnspan=2, padx=20, pady=40)
 
 
 button_ruta = tk.Button(buttom_frame, 
-                         text='Buscar Imagen',
-                         font=('Arial', 8),
+                         text=('Buscar Imagen'),
+                         font=('Arial', 8, 'bold'),
                          bg='#00008B',
                          foreground='white',
                          relief='flat')
@@ -40,7 +40,7 @@ entry_ruta.grid(row=1, column=1, padx=5, pady=5, sticky='w')
 
 button_ruta = tk.Button(buttom_frame, 
                          text='Iniciar',
-                         font=('Helvetica  bold', 12),
+                         font=('Helvetica', 12, "bold"),
                          bg='#00008B',
                          foreground='white',
                          relief='flat')
@@ -59,7 +59,11 @@ text_captura = tk.Text(frame_text,
                        height=10,
                        wrap='none',
                        yscrollcommand=scroll_barra.set)
-text_captura.pack(fill='both')
+text_captura.pack(fill='both', padx=5, pady=5)
+borde_frama_text = tk.LabelFrame(frame_text, text='Texto Escaneado', font=('Arial', 10), background='white')
+borde_frama_text.config(bd=2)
+borde_frama_text.pack(padx=2, pady=2)
+
 
 scroll_barra.config(command=text_captura.yview, style='')
 
