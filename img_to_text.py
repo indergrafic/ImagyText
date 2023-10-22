@@ -61,7 +61,7 @@ text_captura = tk.Text(frame_text,
                        yscrollcommand=scroll_barra.set)
 text_captura.pack(fill='both')
 
-scroll_barra.config(command=text_captura.yview)
+scroll_barra.config(command=text_captura.yview, style='')
 
 
 # ------------------ Barra de Menus ----------------------------
