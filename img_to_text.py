@@ -14,7 +14,7 @@ root.iconbitmap('text-Img.ico')
 # ---------------- Instruciones para la conversión -------------------
 def abrir_archivo():
     global archivo
-    archivo = filedialog.askopenfilenames(title="abrir")
+    archivo = filedialog.askopenfilenames(title='abrir')
     label_ruta.config(text=archivo)
     print(archivo)
 
@@ -22,7 +22,7 @@ def convert_text():
     pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
     ruta_imagen= archivo
-    imagen_abierta = Image.open(ruta_imagen, mode='r')
+    imagen_abierta = Image.open(ruta_imagen)
     texto = pytesseract.image_to_string(imagen_abierta)
     label_text_scan.config(text=texto)
     
