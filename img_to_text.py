@@ -1,13 +1,26 @@
 from tkinter import *
-from tkinter import ttk
+from PIL import Image
+import pytesseract
 
+
+# ---------------- Ventana Principal -------------------
 root = Tk()
 
 root.title('Convert-Text')
 root.resizable(True,True)
 root.iconbitmap('text-Img.ico')
 
+# ---------------- Instruciones para la conversión -------------------
+def convert_text():
+    pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
+    ruta_imagen= 'imagentexto.png'
+    imagen_abierta = Image.open(ruta_imagen)
+    texto = pytesseract.image_to_string(imagen_abierta)
+    label_text_scan.config(text=texto)
+    
+
+# ---------------- Ventanas Secundarias -------------------
 frame_botones = Frame()
 frame_botones.pack(fill='both', expand='True')
 frame_botones.config(bg='#333051', width=500, height=200, cursor='hand2')
@@ -21,6 +34,7 @@ Label(frame_botones, image=mi_imagen, bg='#333051').grid(row=0, column=0,
                                                          padx=20, pady=10,
                                                          sticky='e')
 
+# ---------------- Etiquetas de informacion y botones  -------------------
 label_descrip = Label(frame_botones,text='Extraiga texto e una imagen\n con Convert-Text',
                       font=('Times', 16, 'bold'),
                       bg='#333051',
@@ -48,23 +62,42 @@ boton_iniciar = Button(frame_botones,
                        bg='#3CB4FA',
                        fg='white',
                        border=2,
-                       justify='center')
+                       justify='center',
+                       command=convert_text)
 boton_iniciar.grid(row=2, column=0,columnspan=2, padx=30, pady=10)
 
-label_frame= LabelFrame(frame_text, 
+# ---------------- Ventana para el texto -------------------
+cuadro_texto= LabelFrame(frame_text,
                         text='Scan-Text',
                         font=('Times', 8, 'bold'),
                         bg='#333051',
                         fg='white')
-label_frame.pack(padx=10, pady=10)
+cuadro_texto.grid(row=0, column=0, padx=15, pady=10, sticky='ew')
 
-label_text_scan = Label(label_frame, text='Lorem Ipsum es simplemente el texto de relleno\nde las imprentas y archivos de texto. Lorem Ipsum\nha sido el texto de relleno estándar de las industrias\ndesde el año 1500, cuando un impresor (N. del T. persona\nque se dedica a la imprenta).',
+label_text_scan = Label(cuadro_texto,
+                        text='',
                         font=('Time', 11, 'bold'),
                         justify='left',
                         fg='white',
-                        bg='#333051')
-label_text_scan.pack(padx=5)
-
+                        bg='#333051',
+                        width=40)
+label_text_scan.grid(row=0, column=0, sticky='ew')
 
 
 root.mainloop()
+
+'''label_frame= LabelFrame(frame_text, 
+                        text='Scan-Text',
+                        font=('Times', 8, 'bold'),
+                        bg='#333051',
+                        fg='white',
+                        padx=2, pady=2)
+label_frame.pack(padx=10, pady=10)
+
+label_text_scan = Label(label_frame,text='',
+                        font=('Time', 11, 'bold'),
+                        justify='left',
+                        fg='white',
+                        bg='#333051',
+                        width=40)
+label_text_scan.pack()'''
