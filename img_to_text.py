@@ -85,19 +85,3 @@ label_text_scan.grid(row=0, column=0, sticky='ew')
 
 
 root.mainloop()
-
-'''label_frame= LabelFrame(frame_text, 
-                        text='Scan-Text',
-                        font=('Times', 8, 'bold'),
-                        bg='#333051',
-                        fg='white',
-                        padx=2, pady=2)
-label_frame.pack(padx=10, pady=10)
-
-label_text_scan = Label(label_frame,text='',
-                        font=('Time', 11, 'bold'),
-                        justify='left',
-                        fg='white',
-                        bg='#333051',
-                        width=40)
-label_text_scan.pack()'''
