@@ -15,14 +15,14 @@ root.iconbitmap('text-Img.ico')
 def abrir_archivo():
     global archivo
     archivo = filedialog.askopenfilenames(title='abrir')
-    label_ruta.config(text=archivo)
-    print(archivo)
+    label_ruta.config(text=archivo[0])
+    print(archivo[0])
 
 def convert_text():
     pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-    ruta_imagen= archivo
-    imagen_abierta = Image.open(ruta_imagen)
+    ruta_imagen= archivo[0]
+    imagen_abierta = Image.open(ruta_imagen, mode='r')
     texto = pytesseract.image_to_string(imagen_abierta)
     label_text_scan.config(text=texto)
     
