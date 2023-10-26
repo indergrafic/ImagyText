@@ -92,9 +92,10 @@ frame_text = Frame()
 frame_text.pack(fill='both', expand='True')
 frame_text.config(bg='#333051', width=400, height=200,cursor='hand2')
 
-mi_imagen = PhotoImage(file='textlogo-img.png')
+mi_imagen = PhotoImage(file='textlogo.png')
 Label(frame_botones, image=mi_imagen, bg='#333051').grid(row=0, column=0,
-                                                         pady=10,
+                                                         pady=20,
+                                                         padx=10,
                                                          sticky='e')
 
 # ---------------- Etiquetas de informacion y botones  -------------------
