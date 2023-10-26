@@ -6,13 +6,13 @@ import pytesseract
 from translate import Translator
 
 
-
 # ---------------- Ventana Principal -------------------
 root = Tk()
 
 root.title('Convert-Text')
 root.resizable(True, 1)
 root.iconbitmap('text-Img.ico')
+
 # ---------------- Ventanas secundarias -------------------
 def error_busqueda():
     respuesta = messagebox.askretrycancel("Error en la Busqueda", 'Archivo o Ruta especificada\n no es correcta.')
@@ -21,8 +21,8 @@ def error_busqueda():
 
 # ---------------- Instruciones para la conversión -------------------
 def abrir_archivo():
-    ''' Función que nos permite hacer la busqueda del archivo que escanearemos su texto.'''
     global archivo
+    ''' Función que nos permite hacer la busqueda del archivo que escanearemos su texto.'''
     try:
         archivo = filedialog.askopenfilenames(title="Buscar Archivo", 
                                             initialdir="C:/",
@@ -33,10 +33,11 @@ def abrir_archivo():
     label_ruta.config(text=archivo[0])
 
 def convert_text():
+    global texto
     ''' Función con la que abrimos el programa que realiza la tarea de conversión.
     Ser realiza una apertura del archivo, el escaneo del texto y su guardado, y lo enviamos
      a la etiqueta que lo imprime en pantalla. '''
-    global texto
+    texto = ''
     try:    
         pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
         ruta_imagen= archivo[0]
@@ -45,7 +46,10 @@ def convert_text():
         label_text_scan.config(text=texto)
     except: error_busqueda()
 
+# ---- Funcionalidad para traducir el texto a Español (si esta en ingles) -------
 def traduccion():
+    global texto
+    traducido = ''
     ''' Funcion que tras instalar el modulo "translator", nos convierte el texto en ingles a español.'''
     respuesta = messagebox.askquestion(title='Tradución', message="¿Esta seguro de querer Traducir el texto?")
     if respuesta == 'yes':
@@ -53,12 +57,28 @@ def traduccion():
             trad = Translator(to_lang='es')
             traducido = trad.translate(texto)
             label_text_scan.config(text=traducido)
+            texto = traducido
         except: 
             respuesta = messagebox.askretrycancel("Error Traducción", 'Se ha producido un error inesperado.')
             if respuesta == True:
                 traduccion()
+    
+# ---------------------- Guardar archivos -------------------------------- 
+def guardar_archivo():
+            resp = messagebox.askquestion(title='Guardar..', 
+                                   message='¿Quiere guardar el texto actual?')
+    
+            if resp == 'yes':
+                archivo_guardado = filedialog.asksaveasfile(title="Guardar archivo...", 
+                                                        defaultextension='.txt',
+                                                        filetypes=(("Archivos de texto",'*.txt'),))
+                parrafo = texto
+                archivo_guardado.write(parrafo)
+                archivo_guardado.close()
 
-
+def borrar_texto():
+     label_text_scan.config(text='')
+            
 # --------------- Barra de Menus y Funcionalidades ------------------------
 def salir_Aplicacion():
     valor = messagebox.askquestion(title='Salir', message='¿Desea salir de la Aplicación?')
@@ -99,14 +119,14 @@ Label(frame_botones, image=mi_imagen, bg='#333051').grid(row=0, column=0,
                                                          sticky='e')
 
 # ---------------- Etiquetas de informacion y botones  -------------------
-label_descrip = Label(frame_botones,text='Extraiga texto e una imagen\n con Convert-Text',
+label_descrip = Label(frame_botones,text='Extraiga texto de una imagen\n con Convert-Text',
                       font=('Times', 16, 'bold'),
                       bg='#333051',
                       fg='#8DF3A8', anchor='center')
 label_descrip.grid(row=0, column=1, padx=15, pady=20)
 
 boton_buscar = Button(frame_botones, 
-                      text='Buscar Ruta', 
+                      text='Buscar Ruta de Imagen', 
                       font=('Times', 9, 'bold'),
                       bg='#258097',
                       fg='white',
@@ -122,11 +142,12 @@ label_ruta = Label(frame_botones, text='..\indica la ruta del archivo.',
 label_ruta.grid(row=1, column=1, padx=5, pady=20)
 
 boton_guardar = Button(frame_botones, 
-                       text='Guardar Texto', 
+                       text='Guardar...', 
                        font=('Times', 9, 'bold'),
                        bg='#3CB4FA',
                        fg='white',
-                       border=2)
+                       border=2,
+                       command=guardar_archivo)
 boton_guardar.grid(row=2, column=0, padx=30, pady=10,)
 
 boton_iniciar = Button(frame_botones, 
