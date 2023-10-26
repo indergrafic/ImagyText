@@ -3,13 +3,15 @@ from tkinter import filedialog
 from tkinter import messagebox
 from PIL import Image
 import pytesseract
+from translate import Translator
+
 
 
 # ---------------- Ventana Principal -------------------
 root = Tk()
 
 root.title('Convert-Text')
-root.resizable(False, False)
+root.resizable(True, 1)
 root.iconbitmap('text-Img.ico')
 # ---------------- Ventanas secundarias -------------------
 def error_busqueda():
@@ -34,6 +36,7 @@ def convert_text():
     ''' Función con la que abrimos el programa que realiza la tarea de conversión.
     Ser realiza una apertura del archivo, el escaneo del texto y su guardado, y lo enviamos
      a la etiqueta que lo imprime en pantalla. '''
+    global texto
     try:    
         pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
         ruta_imagen= archivo[0]
@@ -41,7 +44,21 @@ def convert_text():
         texto = pytesseract.image_to_string(imagen_abierta)
         label_text_scan.config(text=texto)
     except: error_busqueda()
-    
+
+def traduccion():
+    ''' Funcion que tras instalar el modulo "translator", nos convierte el texto en ingles a español.'''
+    respuesta = messagebox.askquestion(title='Tradución', message="¿Esta seguro de querer Traducir el texto?")
+    if respuesta == 'yes':
+        try:
+            trad = Translator(to_lang='es')
+            traducido = trad.translate(texto)
+            label_text_scan.config(text=traducido)
+        except: 
+            respuesta = messagebox.askretrycancel("Error Traducción", 'Se ha producido un error inesperado.')
+            if respuesta == True:
+                traduccion()
+
+
 # --------------- Barra de Menus y Funcionalidades ------------------------
 def salir_Aplicacion():
     valor = messagebox.askquestion(title='Salir', message='¿Desea salir de la Aplicación?')
@@ -84,31 +101,51 @@ Label(frame_botones, image=mi_imagen, bg='#333051').grid(row=0, column=0,
 label_descrip = Label(frame_botones,text='Extraiga texto e una imagen\n con Convert-Text',
                       font=('Times', 16, 'bold'),
                       bg='#333051',
-                      fg='white')
+                      fg='#8DF3A8', anchor='center')
 label_descrip.grid(row=0, column=1, padx=15, pady=20)
 
 boton_buscar = Button(frame_botones, 
                       text='Buscar Ruta', 
                       font=('Times', 9, 'bold'),
-                      bg='#3CB4FA',
+                      bg='#258097',
                       fg='white',
-                      border=2, command=abrir_archivo)
+                      border=2, 
+                      command=abrir_archivo)
 boton_buscar.grid(row=1, column=0, padx=20, pady=20, ipadx=3, ipady=3)
 
 label_ruta = Label(frame_botones, text='..\indica la ruta del archivo.',
                    font=('Arial', 8, 'bold'), 
                    fg='#71729C',
-                   bg='#333051',anchor='center')
+                   bg='#333051',
+                   anchor='center')
 label_ruta.grid(row=1, column=1, padx=5, pady=20)
+
+boton_guardar = Button(frame_botones, 
+                       text='Guardar Texto', 
+                       font=('Times', 9, 'bold'),
+                       bg='#3CB4FA',
+                       fg='white',
+                       border=2)
+boton_guardar.grid(row=2, column=0, padx=30, pady=10,)
 
 boton_iniciar = Button(frame_botones, 
                        text='Inicar Conversion', 
                        font=('Times', 9, 'bold'),
+                       bg='#258097',
+                       fg='white',
+                       border=2, 
+                       anchor='center',
+                       command=convert_text)
+boton_iniciar.grid(row=2, column=1, padx=30, pady=10,)
+
+boton_traducir = Button(frame_botones, 
+                       text='Traducir Texto', 
+                       font=('Times', 9, 'bold'),
                        bg='#3CB4FA',
                        fg='white',
                        border=2,
-                       command=convert_text)
-boton_iniciar.grid(row=2, column=0,columnspan=2, padx=30, pady=10,)
+                       command=traduccion)
+boton_traducir.grid(row=2, column=2, padx=30, pady=10,)
 
 # ---------------- Ventana para el texto -------------------
 cuadro_texto= LabelFrame(frame_text,
@@ -116,7 +153,7 @@ cuadro_texto= LabelFrame(frame_text,
                         font=('Times', 8, 'bold'),
                         bg='#333051',
                         fg='white')
-cuadro_texto.grid(row=0, column=0, padx=15, pady=10, sticky='we')
+cuadro_texto.grid(row=1, column=0, columnspan=1, padx=15, pady=10, sticky='we')
 
 label_text_scan = Label(cuadro_texto,
                         text='',
@@ -126,6 +163,8 @@ label_text_scan = Label(cuadro_texto,
                         bg='#333051',
                         width=60, anchor='center')
 label_text_scan.grid(row=0, column=0, sticky='ew')
+
+
 
 
 root.mainloop()
