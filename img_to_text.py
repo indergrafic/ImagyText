@@ -15,7 +15,7 @@ root.iconbitmap('text-Img.ico')
 
 # -------------- Ventana de Bienvenida -------------------
 def pantalla_Bienvenida():
-        messagebox.showinfo('Bienvenida', 'Bien venido a Convert-Text.\nEscanea una imgen para extraer el texto de la misma en formato ".txt". Podras traducirlo del ingles al español y guardarlo en un archivo.\nRecuerda tener instalado Tesseract.exe ')
+        messagebox.showinfo('Bienvenida', 'Bien venido a Convert-Text.\nEscanea una imgen para extraer el texto y guardarlo en un "Archivo.txt". Podras traducirlo, ingles <> español.\nRecuerda: debes tener instalado Tesseract.exe ')
 
 # ---------------- Ventanas secundarias -------------------
 def error_busqueda():
@@ -36,24 +36,8 @@ def abrir_archivo():
     '''Atraves del config, modificamos el texto de la Etiqueta, para mostrar el path del archivo.'''
     try:
         label_ruta.config(text=archivo[0])
-        mostrar_imagen()
     except IndexError:
         error_busqueda()
-def mostrar_imagen():
-    ruta_correcta = archivo[0]
-    a = '\ '
-    b = '/'
-    for i in ruta_correcta:
-        if i == a:
-            ruta_correcta = archivo[0].replace(i, b)
-    
-    print(ruta_correcta)
-
-    img_min = Image.open(ruta_correcta)
-    tamano = img_min.resize((70,70), Image.ADAPTIVE)
-    foto = ImageTk.PhotoImage(tamano)
-    label_foto = Label(frame_botones, image=foto)
-    label_foto.pack(pady=20, padx=10)
 
 def convert_text():
     global texto
