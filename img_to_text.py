@@ -11,7 +11,7 @@ root = Tk()
 
 root.title('Convert-Text')
 root.resizable(True, 1)
-root.iconbitmap('text-img.ico')
+root.iconbitmap('D:\\a_WEB-Trabajos\\Repo GitHub\\Imagen_a_Texto\\text-img.ico')
 
 # -------------- Ventana de Bienvenida -------------------
 def pantalla_Bienvenida():
