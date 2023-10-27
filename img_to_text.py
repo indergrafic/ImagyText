@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
-from PIL import Image
+from PIL import Image, ImageTk
 import pytesseract
 from translate import Translator
 
@@ -36,8 +36,24 @@ def abrir_archivo():
     '''Atraves del config, modificamos el texto de la Etiqueta, para mostrar el path del archivo.'''
     try:
         label_ruta.config(text=archivo[0])
+        mostrar_imagen()
     except IndexError:
         error_busqueda()
+def mostrar_imagen():
+    ruta_correcta = archivo[0]
+    a = '\ '
+    b = '/'
+    for i in ruta_correcta:
+        if i == a:
+            ruta_correcta = archivo[0].replace(i, b)
+    
+    print(ruta_correcta)
+
+    img_min = Image.open(ruta_correcta)
+    tamano = img_min.resize((70,70), Image.ADAPTIVE)
+    foto = ImageTk.PhotoImage(tamano)
+    label_foto = Label(frame_botones, image=foto)
+    label_foto.pack(pady=20, padx=10)
 
 def convert_text():
     global texto
@@ -161,14 +177,14 @@ boton_buscar = Button(frame_botones,
                       fg='white',
                       border=2, 
                       command=abrir_archivo)
-boton_buscar.grid(row=1, column=0, padx=50, pady=20, ipadx=3, ipady=3)
+boton_buscar.grid(row=2, column=0, padx=50, pady=20, ipadx=3, ipady=3)
 
 label_ruta = Label(frame_botones, text='..\indica la ruta del archivo.',
                    font=('Arial', 8, 'bold'), 
                    fg='#71729C',
                    bg='#333051',
                    anchor='center')
-label_ruta.grid(row=1, column=1, padx=5, pady=20)
+label_ruta.grid(row=2, column=1, padx=5, pady=20)
 
 boton_iniciar = Button(frame_botones, 
                        text='Inicar Conversion', 
@@ -178,7 +194,7 @@ boton_iniciar = Button(frame_botones,
                        border=2, 
                        anchor='center',
                        command=convert_text)
-boton_iniciar.grid(row=2, column=0, padx=10, pady=10,)
+boton_iniciar.grid(row=3, column=0, padx=10, pady=10,)
 
 boton_guardar = Button(frame_botones, 
                        text='  Guardar Texto..  ', 
@@ -187,7 +203,7 @@ boton_guardar = Button(frame_botones,
                        fg='white',
                        border=2,
                        command=guardar_archivo)
-boton_guardar.grid(row=2, column=1, padx=30, pady=10)
+boton_guardar.grid(row=3, column=1, padx=30, pady=10)
 
 boton_traducir_Es = Button(frame_botones, 
                        text='Traducir al Español', 
@@ -196,7 +212,7 @@ boton_traducir_Es = Button(frame_botones,
                        fg='white',
                        border=2,                       
                        command=traduccion_espanol)
-boton_traducir_Es.grid(row=3, column=0, padx=30, pady=10)
+boton_traducir_Es.grid(row=4, column=0, padx=30, pady=10)
 
 boton_traducir_In = Button(frame_botones, 
                        text='Traducir al Ingles', 
@@ -205,7 +221,7 @@ boton_traducir_In = Button(frame_botones,
                        fg='white',
                        border=2,
                        command=traduccion_ingles)
-boton_traducir_In.grid(row=3, column=1, padx=30, pady=10)
+boton_traducir_In.grid(row=4, column=1, padx=30, pady=10)
 
 # ---------------- Ventana para el texto -------------------
 cuadro_texto= LabelFrame(frame_text,
