@@ -13,9 +13,13 @@ root.title('Convert-Text')
 root.resizable(True, 1)
 root.iconbitmap('text-Img.ico')
 
+# -------------- Ventana de Bienvenida -------------------
+def pantalla_Bienvenida():
+        messagebox.showinfo('Bienvenida', 'Bien venido a Convert-Text.\nEscanea una imgen para extraer el texto de la misma en formato ".txt". Podras traducirlo del ingles al español y guardarlo en un archivo.\nRecuerda tener instalado Tesseract.exe ')
+
 # ---------------- Ventanas secundarias -------------------
 def error_busqueda():
-    respuesta = messagebox.askretrycancel("Error en la Busqueda", 'Archivo o Ruta especificada\n no es correcta.')
+    respuesta = messagebox.askretrycancel("Error en la Busqueda", 'Ruta especificada no es correcta.')
     if respuesta == True:
         abrir_archivo()
 
@@ -30,7 +34,10 @@ def abrir_archivo():
     except: error_busqueda()
 
     '''Atraves del config, modificamos el texto de la Etiqueta, para mostrar el path del archivo.'''
-    label_ruta.config(text=archivo[0])
+    try:
+        label_ruta.config(text=archivo[0])
+    except IndexError:
+        error_busqueda()
 
 def convert_text():
     global texto
@@ -46,35 +53,57 @@ def convert_text():
         label_text_scan.config(text=texto)
     except: error_busqueda()
 
-# ---- Funcionalidad para traducir el texto a Español (si esta en ingles) -------
-def traduccion():
+# ---- Funcionalidad para traducir el texto Español <> Ingles -------
+def traduccion_espanol():
     global texto
     traducido = ''
     ''' Funcion que tras instalar el modulo "translator", nos convierte el texto en ingles a español.'''
     respuesta = messagebox.askquestion(title='Tradución', message="¿Esta seguro de querer Traducir el texto?")
     if respuesta == 'yes':
         try:
-            trad = Translator(to_lang='es')
+            trad = Translator(from_lang='en', to_lang='es')
             traducido = trad.translate(texto)
             label_text_scan.config(text=traducido)
             texto = traducido
         except: 
             respuesta = messagebox.askretrycancel("Error Traducción", 'Se ha producido un error inesperado.')
             if respuesta == True:
-                traduccion()
+                traduccion_espanol()
+
+def traduccion_ingles():
+    global texto
+    traducido = ''
+    ''' Funcion que tras instalar el modulo "translator", nos convierte el texto en ingles a español.'''
+    respuesta = messagebox.askquestion(title='Tradución', message="¿Esta seguro de querer Traducir el texto?")
+    if respuesta == 'yes':
+        try:
+            trad = Translator(from_lang='es', to_lang='en')
+            traducido = trad.translate(texto)
+            label_text_scan.config(text=traducido)
+            texto = traducido
+        except: 
+            respuesta = messagebox.askretrycancel("Error Traducción", 'Se ha producido un error inesperado.')
+            if respuesta == True:
+                traduccion_ingles()
     
 # ---------------------- Guardar archivos -------------------------------- 
 def guardar_archivo():
-            resp = messagebox.askquestion(title='Guardar..', 
+    resp = messagebox.askquestion(title='Guardar..', 
                                    message='¿Quiere guardar el texto actual?')
-    
-            if resp == 'yes':
-                archivo_guardado = filedialog.asksaveasfile(title="Guardar archivo...", 
-                                                        defaultextension='.txt',
-                                                        filetypes=(("Archivos de texto",'*.txt'),))
+    if resp == 'yes':  
+        archivo_guardado = filedialog.asksaveasfile(title="Guardar archivo...", 
+                                                            defaultextension='.txt',
+                                                            filetypes=(("Archivos de texto",'*.txt'),))
+        while True:
+            try:
                 parrafo = texto
                 archivo_guardado.write(parrafo)
                 archivo_guardado.close()
+                break
+            except AttributeError:
+                break
+            except NameError:
+                break
 
 def borrar_texto():
      label_text_scan.config(text='')
@@ -123,16 +152,16 @@ label_descrip = Label(frame_botones,text='Extraiga texto de una imagen\n con Con
                       font=('Times', 16, 'bold'),
                       bg='#333051',
                       fg='#8DF3A8', anchor='center')
-label_descrip.grid(row=0, column=1, padx=15, pady=20)
+label_descrip.grid(row=0, column=1, padx=5, pady=30)
 
 boton_buscar = Button(frame_botones, 
-                      text='Buscar Ruta de Imagen', 
+                      text='Buscar Ruta de la Imagen', 
                       font=('Times', 9, 'bold'),
                       bg='#258097',
                       fg='white',
                       border=2, 
                       command=abrir_archivo)
-boton_buscar.grid(row=1, column=0, padx=20, pady=20, ipadx=3, ipady=3)
+boton_buscar.grid(row=1, column=0, padx=50, pady=20, ipadx=3, ipady=3)
 
 label_ruta = Label(frame_botones, text='..\indica la ruta del archivo.',
                    font=('Arial', 8, 'bold'), 
@@ -141,33 +170,42 @@ label_ruta = Label(frame_botones, text='..\indica la ruta del archivo.',
                    anchor='center')
 label_ruta.grid(row=1, column=1, padx=5, pady=20)
 
-boton_guardar = Button(frame_botones, 
-                       text='Guardar...', 
-                       font=('Times', 9, 'bold'),
-                       bg='#3CB4FA',
-                       fg='white',
-                       border=2,
-                       command=guardar_archivo)
-boton_guardar.grid(row=2, column=0, padx=30, pady=10,)
-
 boton_iniciar = Button(frame_botones, 
                        text='Inicar Conversion', 
-                       font=('Times', 9, 'bold'),
-                       bg='#258097',
+                       font=('Times', 10, 'bold'),
+                       bg='#5552AB',
                        fg='white',
                        border=2, 
                        anchor='center',
                        command=convert_text)
-boton_iniciar.grid(row=2, column=1, padx=30, pady=10,)
+boton_iniciar.grid(row=2, column=0, padx=10, pady=10,)
 
-boton_traducir = Button(frame_botones, 
-                       text='Traducir Texto', 
-                       font=('Times', 9, 'bold'),
-                       bg='#3CB4FA',
+boton_guardar = Button(frame_botones, 
+                       text='  Guardar Texto..  ', 
+                       font=('Times', 10, 'bold'),
+                       bg='#5552AB',
                        fg='white',
                        border=2,
-                       command=traduccion)
-boton_traducir.grid(row=2, column=2, padx=30, pady=10,)
+                       command=guardar_archivo)
+boton_guardar.grid(row=2, column=1, padx=30, pady=10)
+
+boton_traducir_Es = Button(frame_botones, 
+                       text='Traducir al Español', 
+                       font=('Times', 10, 'bold'),
+                       bg='#AB52A2',
+                       fg='white',
+                       border=2,                       
+                       command=traduccion_espanol)
+boton_traducir_Es.grid(row=3, column=0, padx=30, pady=10)
+
+boton_traducir_In = Button(frame_botones, 
+                       text='Traducir al Ingles', 
+                       font=('Times', 10, 'bold'),
+                       bg='#AB52A2',
+                       fg='white',
+                       border=2,
+                       command=traduccion_ingles)
+boton_traducir_In.grid(row=3, column=1, padx=30, pady=10)
 
 # ---------------- Ventana para el texto -------------------
 cuadro_texto= LabelFrame(frame_text,
@@ -175,7 +213,7 @@ cuadro_texto= LabelFrame(frame_text,
                         font=('Times', 8, 'bold'),
                         bg='#333051',
                         fg='white')
-cuadro_texto.grid(row=1, column=0, columnspan=1, padx=15, pady=10, sticky='we')
+cuadro_texto.grid(row=1, column=0, padx=15, pady=10)
 
 label_text_scan = Label(cuadro_texto,
                         text='',
@@ -187,6 +225,6 @@ label_text_scan = Label(cuadro_texto,
 label_text_scan.grid(row=0, column=0, sticky='ew')
 
 
-
+pantalla_Bienvenida()
 
 root.mainloop()
