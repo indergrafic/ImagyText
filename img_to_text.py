@@ -11,7 +11,7 @@ root = Tk()
 
 root.title('Convert-Text')
 root.resizable(True, 1)
-root.iconbitmap('text-Img.ico')
+root.iconbitmap('text-img.ico')
 
 # -------------- Ventana de Bienvenida -------------------
 def pantalla_Bienvenida():
