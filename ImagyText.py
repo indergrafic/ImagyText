@@ -1,7 +1,7 @@
 from tkinter import *
-from tkinter import filedialog
+from tkinter import filedialog, ttk
 from tkinter import messagebox
-from PIL import Image, ImageTk
+from PIL import Image
 import pytesseract
 from translate import Translator
 
@@ -9,13 +9,13 @@ from translate import Translator
 # ---------------- Ventana Principal -------------------
 root = Tk()
 
-root.title('Convert-Text')
+root.title('ImagyText')
 root.resizable(True, 1)
 root.iconbitmap('D:\\a_WEB-Trabajos\\Repo GitHub\\Imagen_a_Texto\\textlogo.ico')
 
-# -------------- Ventana de Bienvenida -------------------
+# -------------- Mensaje de Bienvenida -------------------
 def pantalla_Bienvenida():
-        messagebox.showinfo('Bienvenida', 'Bien venido a Convert-Text.\nEscanea una imgen para extraer el texto y guardarlo en un "Archivo.txt". Podras traducirlo, ingles <> español.\nRecuerda: debes tener instalado Tesseract.exe ')
+        messagebox.showinfo('Bienvenido', 'Bienvenido a ImagyText.\nRecuerda tener instalado Tesseract.exe\nPodrás escanear una imagen con texto y extraerlo. Después podrás guardarlo en un ".txt" y/o traducirlo.')
 
 # ---------------- Ventanas secundarias -------------------
 def error_busqueda():
@@ -33,7 +33,7 @@ def abrir_archivo():
                                             filetypes=(("Archivos de imagen",''), ('JPG','*.jpg'), ('PNG','*.png'), ('BMP','*.bmp')))
     except: error_busqueda()
 
-    '''Atraves del config, modificamos el texto de la Etiqueta, para mostrar el path del archivo.'''
+    '''Atraves de config, enviamos el texto del Label "label_ruta", para mostrar el path del archivo.'''
     try:
         label_ruta.config(text=archivo[0])
     except IndexError:
@@ -42,7 +42,7 @@ def abrir_archivo():
 def convert_text():
     global texto
     ''' Función con la que abrimos el programa que realiza la tarea de conversión.
-    Ser realiza una apertura del archivo, el escaneo del texto y su guardado, y lo enviamos
+    Se realiza una apertura del archivo, el escaneo del texto y su guardado, y lo enviamos
      a la etiqueta que lo imprime en pantalla. '''
     texto = ''
     try:    
@@ -54,28 +54,14 @@ def convert_text():
     except: error_busqueda()
 
 # ---- Funcionalidad para traducir el texto Español <> Ingles -------
-def traduccion_espanol():
+def traduccion():
+    ''' Funcion que tras instalar el modulo "Translator", nos permite convertir el texto del inglés al español y a la inversa.'''
     global texto
     traducido = ''
-    ''' Funcion que tras instalar el modulo "translator", nos convierte el texto en ingles a español.'''
-    respuesta = messagebox.askquestion(title='Tradución', message="¿Esta seguro de querer Traducir el texto?")
-    if respuesta == 'yes':
-        try:
-            trad = Translator(from_lang='en', to_lang='es')
-            traducido = trad.translate(texto)
-            label_text_scan.config(text=traducido)
-            texto = traducido
-        except: 
-            respuesta = messagebox.askretrycancel("Error Traducción", 'Se ha producido un error inesperado.')
-            if respuesta == True:
-                traduccion_espanol()
 
-def traduccion_ingles():
-    global texto
-    traducido = ''
-    ''' Funcion que tras instalar el modulo "translator", nos convierte el texto en ingles a español.'''
-    respuesta = messagebox.askquestion(title='Tradución', message="¿Esta seguro de querer Traducir el texto?")
-    if respuesta == 'yes':
+    idioma = str(caja_idiomas.get())
+    if idioma == 'Trad. al Inglés':
+        respuesta = messagebox.askquestion(title='Tradución', message="¿Esta seguro de querer traducir el texto?")
         try:
             trad = Translator(from_lang='es', to_lang='en')
             traducido = trad.translate(texto)
@@ -84,16 +70,28 @@ def traduccion_ingles():
         except: 
             respuesta = messagebox.askretrycancel("Error Traducción", 'Se ha producido un error inesperado.')
             if respuesta == True:
-                traduccion_ingles()
+                traduccion()
+    elif idioma == 'Trad. al Español':
+        respuesta = messagebox.askquestion(title='Tradución', message="¿Esta seguro de querer traducir el texto?")
+        if respuesta == 'yes':
+            try:
+                trad = Translator(from_lang='en', to_lang='es')
+                traducido = trad.translate(texto)
+                label_text_scan.config(text=traducido)
+                texto = traducido
+            except: 
+                respuesta = messagebox.askretrycancel("Error Traducción", 'Se ha producido un error inesperado.')
+                if respuesta == True:
+                    traduccion()
     
 # ---------------------- Guardar archivos -------------------------------- 
 def guardar_archivo():
     resp = messagebox.askquestion(title='Guardar..', 
-                                   message='¿Quiere guardar el texto actual?')
+                                   message='¿Quiére guardar el texto actual?')
     if resp == 'yes':  
         archivo_guardado = filedialog.asksaveasfile(title="Guardar archivo...", 
                                                             defaultextension='.txt',
-                                                            filetypes=(("Archivos de texto",'*.txt'),))
+                                                            filetypes=(("Archivo de texto",'*.txt'),))
         while True:
             try:
                 parrafo = texto
@@ -115,7 +113,7 @@ def salir_Aplicacion():
         root.destroy()
 
 def info_Aplicacion():
-    messagebox.showinfo(title='Información', message='Conversor de texto en formato imagen a formato texto\n Vesion 1.0 (Octubre 2023)')
+    messagebox.showinfo(title='Acerca de..', message='ImagyText\n Vesion 1.0 (Octubre 2023)\n\nEscanea una imagen que contenga texto y extráelo a un archivo “.txt”. Podrás traducirlo del español al inglés o viceversa y guardarlo.')
 
 barra_Menu = Menu(root)
 root.config(menu=barra_Menu, width=300, height=200)
@@ -130,9 +128,9 @@ barra_Menu.add_cascade(label='Archivo', menu=opcion_Archivo)
 barra_Menu.add_cascade(label='Info', menu=opcion_Info)
 
 # ---------------- Ventanas Secundarias -------------------
-''' El primer frame el donde colocamos el texto de presentacion y botones para
-buscar la ruta e iniciar el escaneo. El segundo lo conpone botones de guardado y
-traduccion, y el labelFrame que muestra el texto.'''
+''' El primer Frame, es donde colocamos el texto de presentacion e imgane de la aplicacion. Los botones para:
+buscar la ruta, iniciar el escaneo, guardar el archivo y los de traducción. 
+El segundo Frame se utiliza para mostrar el texto.'''
 frame_botones = Frame()
 frame_botones.pack(fill='both', expand='True')
 frame_botones.config(bg='#333051', width=500, height=200, cursor='hand2')
@@ -141,6 +139,7 @@ frame_text = Frame()
 frame_text.pack(fill='both', expand='True')
 frame_text.config(bg='#333051', width=400, height=200,cursor='hand2')
 
+# ---------------- Imagen logo de la aplicación -------------------
 mi_imagen = PhotoImage(file='D:\\a_WEB-Trabajos\\Repo GitHub\\Imagen_a_Texto\\bitmat.png')
 Label(frame_botones, image=mi_imagen, bg='#333051').grid(row=0, column=0,
                                                          pady=20,
@@ -148,14 +147,14 @@ Label(frame_botones, image=mi_imagen, bg='#333051').grid(row=0, column=0,
                                                          sticky='e')
 
 # ---------------- Etiquetas de informacion y botones  -------------------
-label_descrip = Label(frame_botones,text='Extraiga texto de una imagen\n con Convert-Text',
+label_descrip = Label(frame_botones,text='Extraer texto de una imagen\n con ImagyText',
                       font=('Times', 16, 'bold'),
                       bg='#333051',
                       fg='#8DF3A8', anchor='center')
 label_descrip.grid(row=0, column=1, padx=5, pady=30)
 
 boton_buscar = Button(frame_botones, 
-                      text='Buscar Ruta de la Imagen', 
+                      text='Ruta de la Imagen', 
                       font=('Times', 9, 'bold'),
                       bg='#258097',
                       fg='white',
@@ -163,7 +162,7 @@ boton_buscar = Button(frame_botones,
                       command=abrir_archivo)
 boton_buscar.grid(row=2, column=0, padx=50, pady=20, ipadx=3, ipady=3)
 
-label_ruta = Label(frame_botones, text='..\indica la ruta del archivo.',
+label_ruta = Label(frame_botones, text='..\ aquí aparecerá la ruta del archivo.',
                    font=('Arial', 8, 'bold'), 
                    fg='#71729C',
                    bg='#333051',
@@ -171,7 +170,7 @@ label_ruta = Label(frame_botones, text='..\indica la ruta del archivo.',
 label_ruta.grid(row=2, column=1, padx=5, pady=20)
 
 boton_iniciar = Button(frame_botones, 
-                       text='Inicar Conversion', 
+                       text='Iniciar Conversión', 
                        font=('Times', 10, 'bold'),
                        bg='#5552AB',
                        fg='white',
@@ -187,29 +186,24 @@ boton_guardar = Button(frame_botones,
                        fg='white',
                        border=2,
                        command=guardar_archivo)
-boton_guardar.grid(row=3, column=1, padx=30, pady=10)
+boton_guardar.grid(row=4, column=0, padx=30, pady=10)
 
-boton_traducir_Es = Button(frame_botones, 
-                       text='Traducir al Español', 
-                       font=('Times', 10, 'bold'),
-                       bg='#AB52A2',
-                       fg='white',
-                       border=2,                       
-                       command=traduccion_espanol)
-boton_traducir_Es.grid(row=4, column=0, padx=30, pady=10)
+butom_trad = Button(frame_botones, text='Traducir Texto',
+                   font=('Arial', 10, 'bold'), 
+                   fg='white',
+                   bg='#A20297',
+                   anchor='center',
+                   command=traduccion)
+butom_trad.grid(row=3, column=1, padx=30, pady=10)
 
-boton_traducir_In = Button(frame_botones, 
-                       text='Traducir al Ingles', 
-                       font=('Times', 10, 'bold'),
-                       bg='#AB52A2',
-                       fg='white',
-                       border=2,
-                       command=traduccion_ingles)
-boton_traducir_In.grid(row=4, column=1, padx=30, pady=10)
+caja_idiomas = ttk.Combobox(frame_botones)
+caja_idiomas.grid(row=4, column=1, padx=30, pady=5)
+caja_idiomas['values']=("Trad. al Inglés", "Trad. al Español")
+caja_idiomas.current(0)
 
 # ---------------- Ventana para el texto -------------------
 cuadro_texto= LabelFrame(frame_text,
-                        text='Scan-Text',
+                        text='Texto Extraido',
                         font=('Times', 8, 'bold'),
                         bg='#333051',
                         fg='white')
