@@ -1,4 +1,3 @@
-# Imagen_a_Texto
  Hola, antes de nada, para aquellos que querais probar la aplicación
  debeis instalar el programa "tesseract-ocr.exe" que está incluido en la
  carpeta ImagyText. Este programa es fundamental, ya que se hara uso de
@@ -21,5 +20,3 @@ text inside it and convert that text to ".txt" format.
 The converted text can be saved in a text file.
 If we need to translate this text from English to Spanish or vice versa, we can do it and save it in a text file.
 vice versa, we can do it and save it in a ".txt" file.
-
-Translated with www.DeepL.com/Translator (free version)
