@@ -18,5 +18,5 @@ text recognition.
 With this application, you will be able to search for an image that contains
 text inside it and convert that text to ".txt" format.
 The converted text can be saved in a text file.
-If we need to translate this text from English to Spanish or vice versa, we can do it and save it in a text file.
-vice versa, we can do it and save it in a ".txt" file.
+If we need to translate this text from English to Spanish or
+viceversa, we can do it and save it in a ".txt" file.
