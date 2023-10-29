@@ -2,7 +2,7 @@
  Hola, antes de nada, para aquellos que querais probar la aplicación
  debeis instalar el programa "tesseract-ocr.exe" que está incluido en la
  carpeta ImagyText. Este programa es fundamental, ya que se hara uso de
- él reconocimiento de texto.
+ él para el reconocimiento de texto.
  
  Con esta aplicación, podreis buscar una imagen que contenga
  texto en su interior y convertir ese texto a formato ".txt".
