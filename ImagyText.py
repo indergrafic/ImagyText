@@ -113,7 +113,7 @@ def salir_Aplicacion():
         root.destroy()
 
 def info_Aplicacion():
-    messagebox.showinfo(title='Acerca de..', message='ImagyText\n Vesion 1.0 (Octubre 2023)\n\nEscanea una imagen que contenga texto y extráelo a un archivo “.txt”. Podrás traducirlo del español al inglés o viceversa y guardarlo.')
+    messagebox.showinfo(title='Acerca de..', message='ImagyText\n Vesion 1.0 para Window 10 (Octubre 2023)\n\nEscanea una imagen que contenga texto y extráelo a un archivo “.txt”. Podrás traducirlo del español al inglés o viceversa y guardarlo.')
 
 barra_Menu = Menu(root)
 root.config(menu=barra_Menu, width=300, height=200)
