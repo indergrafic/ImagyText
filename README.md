@@ -1,4 +1,5 @@
 # Imagen_a_Texto
+ ImagyText, aplicación para Windows 10.
  Hola, antes de nada, para aquellos que querais probar la aplicación
  debeis instalar el programa "tesseract-ocr.exe" que está incluido en la
  carpeta ImagyText. Este programa es fundamental, ya que se hara uso de
